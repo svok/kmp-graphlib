@@ -17,7 +17,7 @@ class SimpleUndirectedEdge<V: IVertex>(
     override fun equals(other: Any?): Boolean = when {
         other === this -> true
         other == null -> false
-        (other as? SimpleUndirectedEdge<*>) == null -> false
+        other !is SimpleUndirectedEdge<*> -> false
         other.vertexFrom == this.vertexFrom && other.vertexTo == this.vertexTo -> true
         other.vertexFrom == this.vertexTo && other.vertexTo == this.vertexFrom -> true
         else -> false
