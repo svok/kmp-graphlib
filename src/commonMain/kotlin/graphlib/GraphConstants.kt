@@ -16,4 +16,6 @@ typealias SimpleUndirectedGraph = GraphInMemory<SimpleVertex, SimpleUndirectedEd
 
 object GraphConstants {
     const val DEFAULT_WEIGHT: TCost = 1.0
+    const val ZERRO_WEIGHT: TCost = 0.0
+    val INFINITY_WEIGHT: TCost = Double.MAX_VALUE
 }

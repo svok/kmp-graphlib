@@ -1,6 +1,6 @@
 package graphlib
 
-import graphlib.edge.SimpleDirectedEdge
+import graphlib.edge.SimpleUndirectedEdge
 import graphlib.graph.AbstractGraph
 import graphlib.vertex.SimpleVertex
 import kotlin.test.Test
@@ -8,11 +8,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
 // Should support 2 types of graphs - directed and undirected
-class GraphDirectedTest() {
+class GraphUndirectedTest() {
 
     @Test
     fun constructorTest() {
-        val graph = SimpleDirectedGraph(SimpleVertex("id"))
+        val graph = SimpleUndirectedGraph(SimpleVertex("id"))
         val vertices = graph.vertices.toList()
         assertEquals(1, vertices.size)
     }
@@ -20,7 +20,7 @@ class GraphDirectedTest() {
     // addVertex - adds vertex to the graph
     @Test
     fun addVertex() {
-        val graph = SimpleDirectedGraph()
+        val graph = SimpleUndirectedGraph()
         graph.addVertex(SimpleVertex("id"))
         val vertices = graph.vertices.toList()
         assertEquals(1, vertices.size)
@@ -28,7 +28,7 @@ class GraphDirectedTest() {
 
     @Test
     fun addVertexSameIdThrowsException() {
-        val graph = SimpleDirectedGraph()
+        val graph = SimpleUndirectedGraph()
         graph.addVertex(SimpleVertex("id"))
         assertFails {
             graph.addVertex(SimpleVertex("id"))
@@ -38,8 +38,8 @@ class GraphDirectedTest() {
     // addEdge - adds edge to the graph
     @Test
     fun addEdge() {
-        val graph = SimpleDirectedGraph()
-        graph.addEdge(SimpleDirectedEdge(SimpleVertex("1"), SimpleVertex("2")))
+        val graph = SimpleUndirectedGraph()
+        graph.addEdge(SimpleUndirectedEdge(SimpleVertex("1"), SimpleVertex("2")))
         val edges = graph.edges.toList()
         assertEquals(1, edges.size)
         val vertices = graph.vertices.toList()
@@ -52,8 +52,8 @@ class GraphDirectedTest() {
         assertEquals(7, graph.vertices.count())
         assertEquals(7, graph.edges.count())
         assertEquals(2, graph.edgesFor(v1).count())
-        assertEquals(1, graph.edgesFor(v5).count())
-        assertEquals(0, graph.edgesFor(v7).count())
+        assertEquals(2, graph.edgesFor(v5).count())
+        assertEquals(2, graph.edgesFor(v7).count())
     }
 
     @Test
@@ -62,15 +62,15 @@ class GraphDirectedTest() {
         val way = graph.path(v1, v7).toList()
         assertEquals(
             listOf(
-                SimpleDirectedEdge(v1, v3),
-                SimpleDirectedEdge(v3, v5),
-                SimpleDirectedEdge(v5, v7)
+                SimpleUndirectedEdge(v1, v3),
+                SimpleUndirectedEdge(v3, v5),
+                SimpleUndirectedEdge(v5, v7)
             ),
             way
         )
     }
 
-    private fun createGraph(): AbstractGraph<SimpleVertex, SimpleDirectedEdge<SimpleVertex>> = SimpleDirectedGraph() init {
+    private fun createGraph(): AbstractGraph<SimpleVertex, SimpleUndirectedEdge<SimpleVertex>> = SimpleUndirectedGraph() init {
         // Vertices
         +v1
         +v2
@@ -81,13 +81,13 @@ class GraphDirectedTest() {
         +v7
 
         // Edges
-        +SimpleDirectedEdge(v1, v2)
-        +SimpleDirectedEdge(v1, v3)
-        +SimpleDirectedEdge(v2, v4)
-        +SimpleDirectedEdge(v3, v5)
-        +SimpleDirectedEdge(v4, v6)
-        +SimpleDirectedEdge(v5, v7)
-        +SimpleDirectedEdge(v6, v7)
+        +SimpleUndirectedEdge(v1, v2)
+        +SimpleUndirectedEdge(v1, v3)
+        +SimpleUndirectedEdge(v2, v4)
+        +SimpleUndirectedEdge(v5, v3)
+        +SimpleUndirectedEdge(v4, v6)
+        +SimpleUndirectedEdge(v5, v7)
+        +SimpleUndirectedEdge(v6, v7)
     }
 
     companion object {

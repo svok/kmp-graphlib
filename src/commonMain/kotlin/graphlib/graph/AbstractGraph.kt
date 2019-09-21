@@ -17,13 +17,13 @@ abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>: ITypedGraph<V, E>, I
         }
 
     override var edges: Iterable<E>
-        get() = innerVertices.flatMap { it.value.edges() }.distinctBy { it }.asIterable()
+        get() = innerVertices.flatMap { it.value.edges.values }.distinctBy { it }.asIterable()
         set(value) {
             cleanUpEdges()
             value.forEach(this::addEdge)
         }
 
-    override fun edgesFor(vertex: IVertex): Iterable<E> = innerVertices[vertex]?.edges() ?: emptyList()
+    override fun edgesFor(vertex: IVertex): Iterable<E> = innerVertices[vertex]?.edges?.values ?: emptyList()
     override fun hasVertex(vertex: IVertex): Boolean = innerVertices.containsKey(vertex)
 
     override fun addVertex(vertex: V) {
@@ -38,11 +38,11 @@ abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>: ITypedGraph<V, E>, I
     override fun addEdge(edge: E) {
         addVertex(edge.vertexFrom)
         addVertex(edge.vertexTo)
-        innerVertices[edge.vertexFrom]?.addEdge(edge) ?: throw RuntimeException("Unexpected: vertexFrom doesn't registered in repository")
+        innerVertices[edge.vertexFrom]?.addEdge(edge) ?: throw RuntimeException("Unexpected: vertexFrom isn't registered in repository")
 
         // If this is undirected edge we add it to both starting and ending vertices
         if (! edge.isDirected) {
-            innerVertices[edge.vertexTo]!!.addEdge(edge)
+            innerVertices[edge.vertexTo]?.addEdge(edge) ?: throw RuntimeException("Unexpected: vertexTo isn't registered in repository")
         }
 
     }
@@ -60,17 +60,14 @@ abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>: ITypedGraph<V, E>, I
      * @param to Ending vertex of the path
      * @param weightBlock A lambda function that yields weights for the edges. By default all weights are 1.0
      */
-    override fun path(from: IVertex, to: IVertex, weightBlock: TWeightFunction<E>): Iterable<E> {
-        val handler = CirclePath(
+    @Suppress("UNCHECKED_CAST")
+    override fun path(from: IVertex, to: IVertex, weightBlock: TWeightFunction<E>): Collection<E> =
+        CirclePath(
             graph = this,
             from = from,
             to = to,
             weightFunction = { edge -> weightBlock(edge as E) }
-        )
-        handler.search()
-        handler.printFront()
-        return handler.result().map { it as E }
-    }
+        ).search().map { it as E }
 
     private fun reconstructPath(): List<V> {
         val path = mutableListOf<V>()
@@ -85,15 +82,9 @@ abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>: ITypedGraph<V, E>, I
             if (edge.isDirected) {
                 edges[edge.vertexTo] = edge
             } else {
-                if (vertex == edge.vertexFrom) {
-                    edges[edge.vertexTo] = edge
-                } else {
-                    edges[edge.vertexFrom] = edge
-                }
+                edge.nextTo(vertex)?.also { edges[it] = edge }
             }
         }
-
-        fun edges(): List<EI> = edges.values.toList()
     }
 
     operator fun V.unaryPlus() {

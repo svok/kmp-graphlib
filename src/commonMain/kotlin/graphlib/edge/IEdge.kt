@@ -18,4 +18,9 @@ interface IEdge {
      * Ending vertex of the edge. In case of undirected edge it is equivalent to the [[vertexFrom]]
      */
     val vertexTo: IVertex
+
+    /**
+     * Retrun the vertex next to [[vertex]]
+     */
+    fun nextTo(vertex: IVertex): IVertex? = if (vertex == vertexFrom) vertexTo else null
 }

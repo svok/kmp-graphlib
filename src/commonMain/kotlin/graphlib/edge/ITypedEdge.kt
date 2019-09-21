@@ -13,4 +13,7 @@ interface ITypedEdge<V: IVertex>: IEdge {
      * Ending vertex of the edge. In case of undirected edge it is equivalent to the [[vertexFrom]]
      */
     override val vertexTo: V
+
+    @Suppress("UNCHECKED_CAST")
+    override fun nextTo(vertex: IVertex): V? = super.nextTo(vertex) as V?
 }
