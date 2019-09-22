@@ -1,10 +1,10 @@
 package graphlib
 
-import graphlib.vertex.SimpleVertex
 import graphlib.edge.IEdge
 import graphlib.edge.SimpleDirectedEdge
 import graphlib.edge.SimpleUndirectedEdge
 import graphlib.graph.GraphInMemory
+import graphlib.vertex.SimpleVertex
 
 typealias TCost = Double
 

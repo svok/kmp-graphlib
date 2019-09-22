@@ -1,7 +1,9 @@
 package graphlib.graph
 
+import graphlib.GraphConstants
 import graphlib.TWeightFunction
 import graphlib.algorythms.path.ISearchPath
+import graphlib.edge.IEdge
 import graphlib.edge.ITypedEdge
 import graphlib.vertex.IVertex
 
@@ -68,6 +70,8 @@ abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>
             to = to,
             weightFunction = { edge -> weightBlock(edge as E) }
         ).map { it as E }
+
+    override fun path(from: IVertex, to: IVertex): Iterable<IEdge> = path(from, to) { GraphConstants.DEFAULT_WEIGHT }
 
     private fun reconstructPath(): List<V> {
         val path = mutableListOf<V>()

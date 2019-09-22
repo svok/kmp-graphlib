@@ -17,7 +17,15 @@ apply {
 
 kotlin {
     metadata()
-    jvm()
+    jvm() {
+        withJava()
+        val main by compilations.getting {
+            kotlinOptions.jvmTarget = "12"
+        }
+        val test by compilations.getting {
+            kotlinOptions.jvmTarget = "12"
+        }
+    }
     js {
         browser {
         }

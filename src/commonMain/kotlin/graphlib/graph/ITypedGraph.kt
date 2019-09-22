@@ -35,7 +35,12 @@ interface ITypedGraph<V: IVertex, E: ITypedEdge<V>>: IGraph {
     fun path(
         from: IVertex,
         to: IVertex,
-        weightBlock: TWeightFunction<E> = { GraphConstants.DEFAULT_WEIGHT }
+        weightBlock: TWeightFunction<E>
     ): Iterable<IEdge>
+
+    fun path(
+        from: IVertex,
+        to: IVertex
+    ): Iterable<IEdge> = path(from, to) { GraphConstants.DEFAULT_WEIGHT }
 
 }
