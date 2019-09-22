@@ -9,14 +9,19 @@ import graphlib.graph.IGraph
 import graphlib.vertex.IVertex
 
 class CirclePath(
-    private val graph: IGraph,
-    private val from: IVertex,
-    private val to: IVertex,
-    private val weightFunction: TDefaultWeightFunction = { DEFAULT_WEIGHT }
+    private var graph: IGraph = IGraph.EMPTY
 ) : ISearchPath {
 
+    override fun graph(graph: IGraph) {
+        this.graph = graph
+    }
+
     // Search for shortest path
-    override fun search(): Collection<IEdge> {
+    override fun search(
+        from: IVertex,
+        to: IVertex,
+        weightFunction: TDefaultWeightFunction
+    ): Collection<IEdge> {
         val outer: MutableMap<IVertex, PathInfo> = graph
             .vertices
             .map {

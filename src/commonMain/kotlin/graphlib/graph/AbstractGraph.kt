@@ -1,13 +1,15 @@
 package graphlib.graph
 
 import graphlib.TWeightFunction
-import graphlib.algorythms.path.CirclePath
+import graphlib.algorythms.path.ISearchPath
 import graphlib.edge.ITypedEdge
-import graphlib.exceptions.ConflictingVertexException
 import graphlib.vertex.IVertex
 
-abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>: ITypedGraph<V, E>, IGraphOperational<V, E> {
+abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>
+    : ITypedGraph<V, E>, IGraphBuilder<V, E> {
+
     protected abstract val innerVertices: MutableMap<V, GraphVertex<V, E>>
+    protected abstract val pathSearcher: ISearchPath
 
     override var vertices: Iterable<V>
         get() = innerVertices.keys.asIterable()
@@ -29,8 +31,8 @@ abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>: ITypedGraph<V, E>, I
     override fun addVertex(vertex: V) {
         val sameVertex = innerVertices[vertex]?.vertex
         when {
-            sameVertex != null && sameVertex !== vertex ->
-                throw ConflictingVertexException("You are trying to add a vertex with an ID [$vertex] that has been registered in the graph")
+//            sameVertex != null && sameVertex !== vertex ->
+//                throw ConflictingVertexException("You are trying to add a vertex with an ID [$vertex] that has been registered in the graphlib.graph")
             sameVertex == null -> innerVertices[vertex] = GraphVertex(vertex)
         }
     }
@@ -61,13 +63,11 @@ abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>: ITypedGraph<V, E>, I
      * @param weightBlock A lambda function that yields weights for the edges. By default all weights are 1.0
      */
     @Suppress("UNCHECKED_CAST")
-    override fun path(from: IVertex, to: IVertex, weightBlock: TWeightFunction<E>): Collection<E> =
-        CirclePath(
-            graph = this,
+    override fun path(from: IVertex, to: IVertex, weightBlock: TWeightFunction<E>): Collection<E> = pathSearcher.search(
             from = from,
             to = to,
             weightFunction = { edge -> weightBlock(edge as E) }
-        ).search().map { it as E }
+        ).map { it as E }
 
     private fun reconstructPath(): List<V> {
         val path = mutableListOf<V>()
@@ -86,14 +86,4 @@ abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>: ITypedGraph<V, E>, I
             }
         }
     }
-
-    operator fun V.unaryPlus() {
-        addVertex(this)
-    }
-
-    operator fun E.unaryPlus() {
-        addEdge(this)
-    }
-
-    infix fun init(block: AbstractGraph<V, E>.() -> Unit): AbstractGraph<V, E> = this.apply(block)
 }

@@ -2,6 +2,7 @@ package graphlib
 
 import graphlib.edge.SimpleDirectedEdge
 import graphlib.graph.AbstractGraph
+import graphlib.graph.ITypedGraph
 import graphlib.vertex.SimpleVertex
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,7 +18,7 @@ class GraphDirectedTest() {
         assertEquals(1, vertices.size)
     }
 
-    // addVertex - adds vertex to the graph
+    // addVertex - adds vertex to the graphlib.graph
     @Test
     fun addVertex() {
         val graph = SimpleDirectedGraph()
@@ -26,16 +27,7 @@ class GraphDirectedTest() {
         assertEquals(1, vertices.size)
     }
 
-    @Test
-    fun addVertexSameIdThrowsException() {
-        val graph = SimpleDirectedGraph()
-        graph.addVertex(SimpleVertex("id"))
-        assertFails {
-            graph.addVertex(SimpleVertex("id"))
-        }
-    }
-
-    // addEdge - adds edge to the graph
+    // addEdge - adds edge to the graphlib.graph
     @Test
     fun addEdge() {
         val graph = SimpleDirectedGraph()
@@ -70,7 +62,7 @@ class GraphDirectedTest() {
         )
     }
 
-    private fun createGraph(): AbstractGraph<SimpleVertex, SimpleDirectedEdge<SimpleVertex>> = SimpleDirectedGraph() init {
+    private fun createGraph(): ITypedGraph<SimpleVertex, SimpleDirectedEdge<SimpleVertex>> = SimpleDirectedGraph() init {
         // Vertices
         +v1
         +v2
