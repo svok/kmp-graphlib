@@ -25,6 +25,8 @@ interface ITypedGraph<V: IVertex, E: ITypedEdge<V>>: IGraph {
      */
     fun addEdge(edge: E)
 
+    override fun edgesFor(vertex: IVertex): Iterable<E>
+
     /**
      * Compute the shortest path between vertices [[from]] and [[to]] with the edge weight computed in [[weightBlock]]
      *

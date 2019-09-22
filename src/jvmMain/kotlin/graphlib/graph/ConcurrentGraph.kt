@@ -16,7 +16,7 @@ import kotlin.concurrent.write
 class ConcurrentGraph<V : IVertex, E : ITypedEdge<V>>(
     vertices: Iterable<V> = listOf(),
     edges: Iterable<E> = listOf(),
-    private val instance: AbstractGraph<V, E> = GraphInMemory<V, E>(vertices, edges)
+    private val instance: ITypedGraph<V, E> = GraphInMemory<V, E>(vertices, edges)
 ) : ITypedGraph<V, E>, IGraphBuilder<V, E> {
     private val lock = ReentrantReadWriteLock()
 
