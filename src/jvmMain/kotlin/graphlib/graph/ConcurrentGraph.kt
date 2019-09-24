@@ -11,7 +11,7 @@ import kotlin.concurrent.read
 import kotlin.concurrent.write
 
 /**
- * Thread safe decorator for the [[GraphInMemory]] class
+ * Thread safe decorator for the [[ITypedGraph]] classes
  */
 class ConcurrentGraph<V : IVertex, E : ITypedEdge<V>>(
     vertices: Iterable<V> = listOf(),
@@ -60,5 +60,11 @@ class ConcurrentGraph<V : IVertex, E : ITypedEdge<V>>(
         instance.hasVertex(vertex)
     }
 
+    override fun <T> handle(type: GraphLockType, block: IGraph.() -> T): T = when(type) {
+        GraphLockType.READ -> lock.read { instance.handle<T>(type, block) }
+        GraphLockType.WRITE -> lock.write { instance.handle<T>(type, block) }
+    }
+
     override fun path(from: IVertex, to: IVertex, weightBlock: TWeightFunction<E>): Iterable<IEdge> = instance.path(from, to, weightBlock)
+
 }

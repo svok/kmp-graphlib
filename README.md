@@ -172,12 +172,24 @@ val myConcurrentGraph = ConcurrentGraph(
 There may be different algorythms used for optimal path search. Right now there is only one implemented: [Dijkstra's 
 algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm). If your graph allows 
 [A* search algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm) you better use that instead.
-To do that you need your class to implement ISearchPath interface. Then you need to inject your searcher instance
+To do that you need your class to implement ISearchPath interface and create a creator class implementing 
+IBuildAlgorithm interface. Then you need to inject your searcher instance
 to the graph class:
 ```kotlin
+class AStarPath(val graph: IGraph): ISearchPath { /* ... */ }
+class AStarPathCreator(): IBuildAlorithm<ISearchPath> {
+    private var graph: IGraph = IGraph.EMPTY
+    fun graph(graph: IGraph) { this.graph = graph }
+    fun create() = AStarPath(graph)
+}
+
 val graph = MyGraph(
     vertices = myVertices,
     edges = myEdges,
-    pathSearcher = AStarPath()    
+    pathSearcherCreator = AStarPathCreator()    
 )
 ```
+
+## TODO
+1. A decorator class is required specially for Java since Java does not support Kotlin non-nullables and some other
+features.

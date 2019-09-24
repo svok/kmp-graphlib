@@ -1,20 +1,17 @@
 package graphlib.algorythms.path
 
-import graphlib.*
 import graphlib.GraphConstants.DEFAULT_WEIGHT
 import graphlib.GraphConstants.INFINITY_WEIGHT
 import graphlib.GraphConstants.ZERRO_WEIGHT
+import graphlib.TCost
+import graphlib.TDefaultWeightFunction
 import graphlib.edge.IEdge
 import graphlib.graph.IGraph
 import graphlib.vertex.IVertex
 
 class CirclePath(
-    private var graph: IGraph = IGraph.EMPTY
+    private var graph: IGraph
 ) : ISearchPath {
-
-    override fun graph(graph: IGraph) {
-        this.graph = graph
-    }
 
     // Search for shortest path
     override fun search(
@@ -86,4 +83,5 @@ class CirclePath(
         val vertexPath: Set<IVertex> = setOf(),
         val edgePath: List<IEdge> = emptyList()
     )
+
 }

@@ -13,17 +13,6 @@ import graphlib.vertex.IVertex
 interface ISearchPath {
 
     /**
-     * we cannot include reference to the [[IGraph]] object since normally the last wants to get [[ISearchPath]] object
-     * in its constructor. So, we do initialization in several steps:
-     *   1. Initialize [[ISearchPath]] object with no reference to graph
-     *   2. Initialize [[IGraph]] object with [[ISearchPath]] object
-     *   3. Use [[graph]] method with `this` in [[IGraph]] object to pass reference to
-     *
-     * @param graph [[IGraph]] object where the optimal path will be searched out
-     */
-    fun graph(graph: IGraph)
-
-    /**
      * Search function fo find out an optimal path between vertices [[from]] and [[to]] with the edge weight function
      * [[weightFunction]]
      *

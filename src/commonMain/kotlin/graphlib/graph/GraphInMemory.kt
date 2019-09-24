@@ -1,6 +1,7 @@
 package graphlib.graph
 
-import graphlib.algorythms.path.CirclePath
+import graphlib.algorythms.IBuildAlgorithm
+import graphlib.algorythms.path.CirclePathCreator
 import graphlib.algorythms.path.ISearchPath
 import graphlib.edge.ITypedEdge
 import graphlib.vertex.IVertex
@@ -8,13 +9,11 @@ import graphlib.vertex.IVertex
 class GraphInMemory<V: IVertex, E: ITypedEdge<V>>(
     vertices: Iterable<V> = listOf(),
     edges: Iterable<E> = listOf(),
-    override val pathSearcher: ISearchPath = CirclePath()
+    pathSearcherCreator: IBuildAlgorithm<ISearchPath> = CirclePathCreator()
 )
     : AbstractGraph<V, E>() {
+    override val pathSearcher: ISearchPath by lazy { pathSearcherCreator.apply{ graph(this@GraphInMemory) }.create() }
     override val innerVertices: MutableMap<V, GraphVertex<V, E>> = hashMapOf()
-    init {
-        pathSearcher.graph(this)
-    }
 
     constructor(vararg vertices: V): this(vertices = vertices.asIterable())
     constructor(vararg edges: E): this(edges = edges.asIterable())

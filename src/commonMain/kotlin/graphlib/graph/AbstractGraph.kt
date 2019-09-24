@@ -65,11 +65,13 @@ abstract class AbstractGraph<V: IVertex, E: ITypedEdge<V>>
      * @param weightBlock A lambda function that yields weights for the edges. By default all weights are 1.0
      */
     @Suppress("UNCHECKED_CAST")
-    override fun path(from: IVertex, to: IVertex, weightBlock: TWeightFunction<E>): Collection<E> = pathSearcher.search(
+    override fun path(from: IVertex, to: IVertex, weightBlock: TWeightFunction<E>): Collection<E> = handle {
+        pathSearcher.search(
             from = from,
             to = to,
             weightFunction = { edge -> weightBlock(edge as E) }
         ).map { it as E }
+    }
 
     override fun path(from: IVertex, to: IVertex): Iterable<IEdge> = path(from, to) { GraphConstants.DEFAULT_WEIGHT }
 
